@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
+import glob from "glob";
 import path from "path";
-import util from "util";
-import { execSync } from "child_process";
-
-import pkg from "glob";
-const { glob } = pkg;
 
 import { Command } from "commander";
 const program = new Command();
+
+import * as oad from "@azure/oad";
 
 program
   .name("check-breaking-changes")
@@ -52,20 +50,13 @@ for (const newFile of newFiles) {
  * @param newSpec Path to the new swagger specification file.
  */
 async function openApiDiff(oldSpec, newSpec) {
-  try {
-    const buf = execSync(`oad compare ${oldSpec} ${newSpec}`);
+  const oadOut = await oad.compare(oldSpec, newSpec, { consoleLogLevel: "warn" });
 
-    //console.log(buf.toString());
+  // fix up output from OAD, it does not output valid JSON
+  const result = oadOut.replace(/}\s+{/gi, "},{");
 
-    // fix up output from OAD, it does not output valid JSON
-    const result = buf.toString().replace(/}\s+{/gi, "},{");
+  //console.log(result);
+  const oadResult = JSON.parse(result || "[]");
 
-    //console.log(result);
-    let oadResult = JSON.parse(result || "[]");
-
-    return oadResult;
-
-  } catch (e) {
-    console.error(e); // should contain code (exit code) and signal (that caused the termination).
-  }
+  return oadResult;
 }

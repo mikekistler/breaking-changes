@@ -13,7 +13,8 @@
   "author": "Mike Kistler",
   "license": "MIT",
   "dependencies": {
-    "@azure/oad": "file:../../Azure/openapi-diff",
-    "commander": "^11.1.0"
+    "@azure/oad": "file:../openapi-diff",
+    "commander": "^11.1.0",
+    "glob": "^10.3.10"
   }
 }

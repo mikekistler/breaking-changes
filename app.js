@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import glob from "glob";
+import pkg from "glob";
+const { glob } = pkg;
 import path from "path";
 
 import { Command } from "commander";
@@ -18,8 +19,13 @@ program
 program.parse();
 const options = program.opts();
 
-const baseFiles = glob.sync(path.join(program.args[0], "*.json"));
-const newFiles = glob.sync(path.join(program.args[1], "*.json"));
+function getJsonFiles(dirPath) {
+  // glob does not work with windows path separators, so we convert to posix
+  return glob.sync(path.join(dirPath, "*.json").split(path.sep).join(path.posix.sep));
+}
+
+const baseFiles = getJsonFiles(program.args[0]);
+const newFiles = getJsonFiles(program.args[1]);
 
 const fullDiff = [];
 

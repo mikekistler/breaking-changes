@@ -42,9 +42,43 @@ for (const newFile of newFiles) {
   }
 }
 
+// Filter out non-breaking changes
+const breakingChanges = [
+  "AddedRequiredProperty",
+  "AddedXmsEnum",
+  "AddingRequiredParameter",
+  "AddingResponseCode",
+  "ArrayCollectionFormatChanged",
+  "ChangedParameterOrder",
+  "ConstraintChanged",
+  "ConstraintIsStronger",
+  "ConstraintIsWeaker",
+  "DefaultValueChanged",
+  "DifferentDiscriminator",
+  "ModifiedOperationId",
+  "ParameterInHasChanged",
+  "ProtocolNoLongerSupported",
+  "ReadonlyPropertyChanged",
+  "RemovedAdditionalProperties",
+  "RemovedClientParameter",
+  "RemovedDefinition",
+  "RemovedEnumValue",
+  "RemovedOperation",
+  "RemovedPath",
+  "RemovedProperty",
+  "RemovedRequiredParameter",
+  "RemovedXmsEnum",
+  "RequestBodyFormatNoLongerSupported",
+  "RequiredStatusChange",
+  "TypeFormatChanged",
+  "XmsEnumChanged",
+  "XmsLongRunningOperationChanged"
+]
+const breakingChangesOnly = fullDiff.filter((diff) => breakingChanges.includes(diff.code));
+
 // Write the output to a file
 const outputFileName = "breaking-changes.json";
-const output = JSON.stringify(fullDiff,null, 2);
+const output = JSON.stringify(breakingChangesOnly, null, 2);
 fs.writeFileSync(outputFileName, output);
 
 /**

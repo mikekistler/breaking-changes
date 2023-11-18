@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import pkg from "glob";
-const { glob } = pkg;
+import * as glob from "glob";
 import path from "path";
 
 import { Command } from "commander";
